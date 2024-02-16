@@ -25,7 +25,7 @@ export const handler = async (event) => {
     const old_position_data = await dynamoDb.get(old_pos_params).promise();
     const old_position_old = old_position_data.Item.position_old;
     console.log(old_position_old);
-    const bucket_id = old_data.Item.bucket_id;
+    const bucket_id = old_position_data.Item.bucket_id;
 
     // Generate new position_old based on new_positions for the bucket
     const new_pos_params = {
