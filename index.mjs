@@ -7,7 +7,9 @@ export const handler = async (event) => {
     console.log("hello!");
     // Extract user_id from JWT token
     const token = event.headers.Authorization || event.headers.authorization; // Assuming the token is in the format "Bearer <token>"
+    console.log(token);
     const decoded = jwt.decode(token);
+    console.log(decoded);
     const user_id = decoded.user_id;
     console.log("Decoded JWT user ID:", user_id);
 
