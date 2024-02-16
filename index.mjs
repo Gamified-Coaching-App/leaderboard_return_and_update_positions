@@ -22,8 +22,8 @@ export const handler = async (event) => {
         ProjectionExpression: "bucket_id, position_old"
     };
 
-    const old_data = await dynamoDb.get(old_pos_params).promise();
-    const old_position_old = old_data.Item.position_old;
+    const old_position_data = await dynamoDb.get(old_pos_params).promise();
+    const old_position_old = old_position_data.Item.position_old;
     console.log(old_position_old);
     const bucket_id = old_data.Item.bucket_id;
 
@@ -35,12 +35,12 @@ export const handler = async (event) => {
             ":bucket_id": bucket_id
         }
     };
-    const new_old_data = await dynamoDb.scan(new_pos_params).promise();
-    new_position_old = {};
-    new_old_data.Items.forEach(item => {
-        new_position_old[item.user_id] = item.position_new;
+    const new_position_data = await dynamoDb.scan(new_pos_params).promise();
+    const position_old_updated = {};
+    new_position_data.Items.forEach(item => {
+        position_old_updated[item.user_id] = item.position_new;
     });
-    const new_position_old = JSON.stringify(new_position_old);
+    const new_position_old = JSON.stringify(position_old_updated);
     console.log("New position_old created!");
 
 
