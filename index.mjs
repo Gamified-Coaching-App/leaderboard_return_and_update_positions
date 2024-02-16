@@ -14,7 +14,7 @@ export const handler = async (event) => {
     console.log("Decoded JWT user ID:", user_id);
 
     // Assign variable to user's position_old and bucket_id
-    params = {
+    const old_pos_params = {
         TableName: "leaderboard",
         Key: {
             "user_id": user_id
@@ -22,20 +22,20 @@ export const handler = async (event) => {
         ProjectionExpression: "bucket_id, position_old"
     };
 
-    const old_data = await dynamoDb.get(params).promise();
+    const old_data = await dynamoDb.get(old_pos_params).promise();
     const old_position_old = old_data.Item.position_old;
     console.log(old_position_old);
     const bucket_id = old_data.Item.bucket_id;
 
     // Generate new position_old based on new_positions for the bucket
-    params = {
+    const new_pos_params = {
         TableName: "leaderboard",
         FilterExpression: "bucket_id = :bucket_id",
         ExpressionAttributeValues: {
             ":bucket_id": bucket_id
         }
     };
-    const new_old_data = await dynamoDb.scan(params).promise();
+    const new_old_data = await dynamoDb.scan(new_pos_params).promise();
     new_position_old = {};
     new_old_data.Items.forEach(item => {
         new_position_old[item.user_id] = item.position_new;
