@@ -10,7 +10,7 @@ export const handler = async (event) => {
     console.log(token);
     const decoded = jwt.decode(token);
     console.log(decoded);
-    const user_id = decoded.user_id;
+    const user_id = decoded.sub;
     console.log("Decoded JWT user ID:", user_id);
 
     // Assign variable to user's position_old and bucket_id
