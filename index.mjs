@@ -55,5 +55,5 @@ export const handler = async (event) => {
     console.log("Dynamo DB all updated!");
 
     // return old positions_old, new positions_old
-    return old_position_old;
+    return old_position_old, new_position_old;
 }
