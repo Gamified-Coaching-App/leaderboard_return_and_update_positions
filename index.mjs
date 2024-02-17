@@ -57,5 +57,6 @@ export const handler = async (event) => {
     console.log("Dynamo DB all updated!");
 
     // return old positions_old, new positions_old
+    console.log(JSON.stringify({ "old_position_old": old_position_old, "new_position_old": new_position_old }));
     return JSON.stringify({ "old_position_old": old_position_old, "new_position_old": new_position_old });
 }
