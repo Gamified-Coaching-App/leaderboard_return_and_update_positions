@@ -27,6 +27,12 @@ export const handler = async (event) => {
     console.log(old_position_old);
     const bucket_id = old_position_data.Item.bucket_id;
 
+    // Check if bucket_id is -1
+    if (bucket_id === -1) {
+        console.log("No leaderboard info available!");
+        return JSON.stringify({ message: "No leaderboard info available!" });
+    }
+
     // Generate new position_old based on new_positions for the bucket
     const new_pos_params = {
         TableName: "leaderboard",
