@@ -13,7 +13,7 @@ export const handler = async (event) => {
     const user_id = decoded.sub;
     console.log("Decoded JWT user ID:", user_id);
 
-    // Assign variable to user's position_old and bucket_id
+    // Assign variable to user's position_old and bucket_id (bucket_id is needed for generating later queries)
     const old_pos_params = {
         TableName: "leaderboard",
         Key: {
@@ -33,20 +33,25 @@ export const handler = async (event) => {
         return JSON.stringify({ message: "No leaderboard info available!" });
     }
 
-    // Generate new position_old based on new_positions for the bucket
-    const new_pos_params = {
+    // Generate new current_positions based on new_positions for the bucket
+    // Also get latest aggregare skills points for all users in the bucket
+    const current_params = {
         TableName: "leaderboard",
         FilterExpression: "bucket_id = :bucket_id",
         ExpressionAttributeValues: {
             ":bucket_id": bucket_id
         }
     };
-    const new_position_data = await dynamoDb.scan(new_pos_params).promise();
-    const position_old_updated = {};
-    new_position_data.Items.forEach(item => {
-        position_old_updated[item.user_id] = item.position_new;
+    const current_data = await dynamoDb.scan(current_params).promise();
+    const current_positions_data = {};
+    const agg_skills_data = {};
+    current_data.Items.forEach(item => {
+        current_positions_data[item.user_id] = item.position_new;
+        agg_skills_data[item.user_id] = item.aggregate_skills_season;
     });
-    const new_position_old = JSON.stringify(position_old_updated);
+    const current_positions = JSON.stringify(current_positions_data);
+    console.log("New position_old created!");
+    const agg_skills = JSON.stringify(agg_skills_data);
     console.log("New position_old created!");
 
 
@@ -56,13 +61,15 @@ export const handler = async (event) => {
         Key: { "user_id": user_id },
         UpdateExpression: "set position_old = :position_old",
         ExpressionAttributeValues: {
-            ":position_old": new_position_old
+            ":position_old": current_positions_data
         },
     };
     await dynamoDb.update(updateParams).promise();
     console.log("Dynamo DB all updated!");
 
+
+
     // return old positions_old, new positions_old
-    console.log(JSON.stringify({ "old_position_old": old_position_old, "new_position_old": new_position_old }));
-    return JSON.stringify({ "old_position_old": old_position_old, "new_position_old": new_position_old });
+    console.log(JSON.stringify({ "old_position_old": old_position_old, "new_position_old": current_positions_data }));
+    return JSON.stringify({ "old_position_old": old_position_old, "new_position_old": current_positions_data});
 }
