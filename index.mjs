@@ -23,8 +23,9 @@ export const handler = async (event) => {
     };
 
     const old_position_data = await dynamoDb.get(old_pos_params).promise();
-    const old_position_old = old_position_data.Item.position_old;
-    console.log(old_position_old);
+    const old_positions_string = old_position_data.Item.position_old;
+    console.log(old_positions_string);
+    const old_positions = JSON.parse(old_positions_string);
     const bucket_id = old_position_data.Item.bucket_id;
 
     // Check if bucket_id is -1
@@ -43,16 +44,16 @@ export const handler = async (event) => {
         }
     };
     const current_data = await dynamoDb.scan(current_params).promise();
-    const current_positions_data = {};
-    const agg_skills_data = {};
+    const current_positions = {};
+    const agg_skills = {};
     current_data.Items.forEach(item => {
-        current_positions_data[item.user_id] = item.position_new;
-        agg_skills_data[item.user_id] = item.aggregate_skills_season;
+        current_positions[item.user_id] = item.position_new;
+        agg_skills[item.user_id] = item.aggregate_skills_season;
     });
-    const current_positions = JSON.stringify(current_positions_data);
+    //const current_positions = JSON.stringify(current_positions_data);
     console.log("New position_old created!");
-    const agg_skills = JSON.stringify(agg_skills_data);
-    console.log("New position_old created!");
+    //const agg_skills = JSON.stringify(agg_skills_data);
+    console.log("Aggregate skills pulled!");
 
 
     // Update DB's position_old with the new positions_old
@@ -61,13 +62,30 @@ export const handler = async (event) => {
         Key: { "user_id": user_id },
         UpdateExpression: "set position_old = :position_old",
         ExpressionAttributeValues: {
-            ":position_old": current_positions_data
+            ":position_old": JSON.stringify(current_positions)
         },
     };
     await dynamoDb.update(updateParams).promise();
     console.log("Dynamo DB all updated!");
 
 
+    // Combine data into required format
+    const result = {};
+
+    // Iterate over the keys of the first object
+    for (let key in current_positions) {
+        // Check if the key exists in all three objects
+        if (current_positions.hasOwnProperty(key) && old_positions.hasOwnProperty(key) && agg_skills.hasOwnProperty(key)) {
+            // Construct the final object with nested structure
+            result[key] = {
+                "position_new": current_positions[key],
+                "position_old": old_positions[key],
+                "aggregate_skills_season": agg_skills[key]
+            };
+        }
+    }
+
+    console.log("Data successfully packaged up!");
 
     // return old positions_old, new positions_old
     console.log(JSON.stringify({ "old_position_old": old_position_old, "new_position_old": current_positions_data }));
