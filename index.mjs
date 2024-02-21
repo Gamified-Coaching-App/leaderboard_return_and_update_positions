@@ -90,8 +90,7 @@ export const handler = async (event) => {
     }
 
     console.log("Data successfully packaged up!");
+    console.log(typeof result);
 
-    // return old positions_old, new positions_old
-    console.log(JSON.stringify({ "old_position_old": old_position_old, "new_position_old": current_positions_data }));
-    return JSON.stringify({ "old_position_old": old_position_old, "new_position_old": current_positions_data});
+    return result;
 }
