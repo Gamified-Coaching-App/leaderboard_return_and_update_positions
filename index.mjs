@@ -27,6 +27,8 @@ export const handler = async (event) => {
     console.log(old_positions_string);
     const old_positions = JSON.parse(old_positions_string);
     const bucket_id = old_position_data.Item.bucket_id;
+    console.log(typeof old_positions_string);
+    console.log(typeof old_positions);
 
     // Check if bucket_id is -1
     if (bucket_id === -1) {
@@ -51,9 +53,11 @@ export const handler = async (event) => {
         agg_skills[item.user_id] = item.aggregate_skills_season;
     });
     //const current_positions = JSON.stringify(current_positions_data);
-    console.log("New position_old created!");
+    console.log("Current positions created!");
+    console.log(typeof current_positions);
     //const agg_skills = JSON.stringify(agg_skills_data);
     console.log("Aggregate skills pulled!");
+    console.log(typeof agg_skills);
 
 
     // Update DB's position_old with the new positions_old
