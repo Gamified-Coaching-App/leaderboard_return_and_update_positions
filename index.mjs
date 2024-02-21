@@ -6,7 +6,16 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 export const handler = async (event) => {
     try {
         // Extract user_id from JWT token
-        const token = event.headers.Authorization || event.headers.authorization; // Assuming the token is in the format "Bearer <token>"
+        const authorizationHeader = event.headers.Authorization || event.headers.authorization; // Assuming the token is in the format "Bearer <token>"
+        let token;
+        if (authorizationHeader.startsWith('Bearer')) {
+            // Split the header value by space and return the second part
+            token = authorizationHeader.split(' ')[1];
+        } else {
+            // If "Bearer" prefix is not present, assume the whole header value is the token
+            token = authorizationHeader;
+        }
+       
         // console.log(token);
         const decoded = jwt.decode(token);
         // console.log(decoded);
