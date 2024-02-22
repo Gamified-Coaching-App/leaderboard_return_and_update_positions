@@ -59,8 +59,10 @@ export const handler = async (event) => {
         const current_positions = {};
         const agg_skills = {};
         current_data.Items.forEach(item => {
-            current_positions[item.user_id] = item.position_new;
-            agg_skills[item.user_id] = item.aggregate_skills_season;
+            // current_positions[item.user_id] = item.position_new;
+            current_positions[item.username] = item.position_new;
+            // agg_skills[item.user_id] = item.aggregate_skills_season;
+            agg_skills[item.username] = item.aggregate_skills_season;
         });
         //const current_positions = JSON.stringify(current_positions_data);
         console.log("Current positions created!");
