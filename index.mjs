@@ -7,6 +7,7 @@ export const handler = async (event) => {
     try {
         // Extract user_id from JWT token
         const authorizationHeader = event.headers.Authorization || event.headers.authorization; // Assuming the token is in the format "Bearer <token>"
+        console.log(authorizationHeader);
         let token;
         if (authorizationHeader.startsWith('Bearer')) {
             // Split the header value by space and return the second part
