@@ -79,16 +79,16 @@ export const handler = async (event) => {
 
 
         // Update DB's position_old with the new positions_old
-        // const updateParams = {
-        //     TableName: "leaderboard",
-        //     Key: { "user_id": user_id },
-        //     UpdateExpression: "set position_old = :position_old",
-        //     ExpressionAttributeValues: {
-        //         ":position_old": JSON.stringify(current_positions)
-        //     },
-        // };
-        // await dynamoDb.update(updateParams).promise();
-        // console.log("Dynamo DB all updated!");
+        const updateParams = {
+            TableName: "leaderboard",
+            Key: { "user_id": user_id },
+            UpdateExpression: "set position_old = :position_old",
+            ExpressionAttributeValues: {
+                ":position_old": JSON.stringify(current_positions)
+            },
+        };
+        await dynamoDb.update(updateParams).promise();
+        console.log("Dynamo DB all updated!");
 
 
         // Combine data into required format
