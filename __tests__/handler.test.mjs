@@ -8,7 +8,7 @@ jest.mock('jsonwebtoken', () => ({
 
 const user_id = 'user123';
 const bucket_id = 1;
-const position_old = JSON.stringify({ user1: 1, user2: 2 });
+const position_old = { user1: 1, user2: 2 };
 const position_new = { user1: 3, user2: 4 };
 const aggregate_skills_season = { user1: 100, user2: 200 };
 
@@ -69,7 +69,7 @@ describe('handler function tests', () => {
         expect(result.body).toBeDefined();
 
         const responseBody = JSON.parse(result.body);
-
+        // console.log(position_old.user1);
         expect(responseBody).toEqual([
             {
                 username: "user1",

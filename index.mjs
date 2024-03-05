@@ -37,8 +37,9 @@ export const handler = async (event) => {
         console.log(old_positions_string);
         const old_positions = JSON.parse(old_positions_string);
         const bucket_id = old_position_data.Item.bucket_id;
-        console.log(typeof old_positions_string);
+        // console.log(typeof old_positions_string);
         console.log(typeof old_positions);
+        // console.log(old_positions.user1);
 
         // Check if bucket_id is -1
         if (bucket_id === -1) {
@@ -71,7 +72,7 @@ export const handler = async (event) => {
         });
         //const current_positions = JSON.stringify(current_positions_data);
         console.log("Current positions created!");
-        console.log(typeof current_positions);
+        console.log(current_positions);
         //const agg_skills = JSON.stringify(agg_skills_data);
         console.log("Aggregate skills pulled!");
         console.log(typeof agg_skills);
