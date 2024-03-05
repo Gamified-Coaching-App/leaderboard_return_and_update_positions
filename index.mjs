@@ -16,7 +16,7 @@ export const handler = async (event) => {
             // If "Bearer" prefix is not present, assume the whole header value is the token
             token = authorizationHeader;
         }
-       
+
         // console.log(token);
         const decoded = jwt.decode(token);
         // console.log(decoded);
@@ -43,7 +43,12 @@ export const handler = async (event) => {
         // Check if bucket_id is -1
         if (bucket_id === -1) {
             console.log("No leaderboard info available!");
-            return JSON.stringify({ message: "No leaderboard info available!" });
+            const responseObject = {
+                statusCode: 200,
+                headers: get_headers(),
+                body: JSON.stringify({ message: "No leaderboard info available!" }) // Convert data to JSON string
+            };
+            return responseObject;
         }
 
         // Generate new current_positions based on new_positions for the bucket
@@ -86,18 +91,19 @@ export const handler = async (event) => {
 
 
         // Combine data into required format
-        const result = {};
+        const result = [];
 
         // Iterate over the keys of the first object
         for (let key in current_positions) {
             // Check if the key exists in all three objects
             if (current_positions.hasOwnProperty(key) && old_positions.hasOwnProperty(key) && agg_skills.hasOwnProperty(key)) {
                 // Construct the final object with nested structure
-                result[key] = {
+                result.push({
+                    "username": key,
                     "position_new": current_positions[key],
                     "position_old": old_positions[key],
                     "aggregate_skills_season": agg_skills[key]
-                };
+                });
             }
         }
 
@@ -120,6 +126,7 @@ export const handler = async (event) => {
         // If an error occurs, return an error response
         return {
             statusCode: 500,
+            headers: get_headers(),
             body: JSON.stringify({ message: 'Internal Server Error' })
         };
 
