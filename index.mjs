@@ -33,16 +33,10 @@ export const handler = async (event) => {
         };
 
         const old_position_data = await dynamoDb.get(old_pos_params).promise();
-        const old_positions_string = old_position_data.Item.position_old;
-        console.log(old_positions_string);
-        const old_positions = JSON.parse(old_positions_string);
-        const bucket_id = old_position_data.Item.bucket_id;
-        // console.log(typeof old_positions_string);
-        console.log(typeof old_positions);
-        // console.log(old_positions.user1);
-
         // Check if bucket_id is -1
-        if (bucket_id === -1) {
+        const bucket_id = old_position_data.Item.bucket_id;
+        console.log(bucket_id);
+        if (bucket_id === '-1') {
             console.log("No leaderboard info available!");
             const responseObject = {
                 statusCode: 200,
@@ -51,6 +45,15 @@ export const handler = async (event) => {
             };
             return responseObject;
         }
+        const old_positions_string = old_position_data.Item.position_old;
+        console.log(old_positions_string);
+        const old_positions = JSON.parse(old_positions_string);
+        
+        // console.log(typeof old_positions_string);
+        console.log(typeof old_positions);
+        // console.log(old_positions.user1);
+
+
 
         // Generate new current_positions based on new_positions for the bucket
         // Also get latest aggregate skills points for all users in the bucket
