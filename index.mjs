@@ -103,10 +103,12 @@ export const handler = async (event) => {
 
         console.log("Data successfully packaged up!");
         console.log(typeof result);
+        console.log(result);
 
         // Create a JSON object to return to the frontend
         const responseObject = {
             statusCode: 200,
+            headers: get_headers(),
             body: JSON.stringify(result) // Convert data to JSON string
         };
 
@@ -123,4 +125,12 @@ export const handler = async (event) => {
 
     }
 
+}
+
+function get_headers() {
+    return {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
+        "Access-Control-Allow-Methods": "OPTIONS,GET"
+    };
 }
