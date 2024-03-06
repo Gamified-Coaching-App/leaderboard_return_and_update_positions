@@ -41,7 +41,7 @@ export const handler = async (event) => {
             const responseObject = {
                 statusCode: 200,
                 headers: get_headers(),
-                body: JSON.stringify({ message: "No leaderboard info available!" }) // Convert data to JSON string
+                body: JSON.stringify([]) // Convert data to JSON string
             };
             return responseObject;
         }
