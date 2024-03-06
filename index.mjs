@@ -33,6 +33,7 @@ export const handler = async (event) => {
         };
 
         const old_position_data = await dynamoDb.get(old_pos_params).promise();
+        console.log(old_position_data);
         // Check if bucket_id is -1
         const bucket_id = old_position_data.Item.bucket_id;
         console.log(bucket_id);
@@ -47,6 +48,7 @@ export const handler = async (event) => {
         }
         const old_positions_string = old_position_data.Item.position_old;
         console.log(old_positions_string);
+        console.log(typeof old_positions_string);
         const old_positions = JSON.parse(old_positions_string);
         
         // console.log(typeof old_positions_string);
