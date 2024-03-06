@@ -1,8 +1,8 @@
 import { handler } from '../index.mjs';
 import jwt from 'jsonwebtoken';
 import AWS from 'aws-sdk';
-// Resetting modules to ensure a clean mock state
 
+// Resetting modules to ensure a clean mock state
 beforeEach(() => {
     jest.resetModules();
     jest.clearAllMocks();
@@ -14,18 +14,8 @@ jest.mock('jsonwebtoken', () => ({
     decode: jest.fn(),
 }));
 
-// const user_id = 'user123';
-// const bucket_id = 1;
-// const position_old = { user1: 1, user2: 2 };
-// const position_new = { user1: 3, user2: 4 };
-// const aggregate_skills_season = { user1: 100, user2: 200 };
-
+// Mock AWS library
 jest.mock('aws-sdk', () => {
-    // const position_old = JSON.stringify({ user1: 1, user2: 2 });
-    // const user_id = 'user123';
-    // const bucket_id = 'bucket123';
-    // const position_new = { user1: 3, user2: 4 };
-    // const aggregate_skills_season = { user1: 100, user2: 200 };
 
     const getMock = jest.fn();
     const scanMock = jest.fn();
@@ -81,7 +71,6 @@ describe('handler function tests', () => {
         expect(result.body).toBeDefined();
 
         const responseBody = JSON.parse(result.body);
-        // console.log(position_old.user1);
         const parsedPositionOld = JSON.parse(position_old);
 
         expect(responseBody).toEqual([
